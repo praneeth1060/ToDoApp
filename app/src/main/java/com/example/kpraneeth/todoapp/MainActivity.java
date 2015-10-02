@@ -1,25 +1,43 @@
 package com.example.kpraneeth.todoapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import android.widget.BaseAdapter;
+
+
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,10 +50,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActiveAndroid.initialize(this);
         setContentView(R.layout.activity_main);
-        populateArrayItems();
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        lvItems.setAdapter(aToDoAdapter);
+
+        // TodoDatabaseHandler is a SQLiteOpenHelper class connecting to SQLite
+        TodoDatabaseHandler handler = new TodoDatabaseHandler(this);
+// Get access to the underlying writeable database
+        SQLiteDatabase db = handler.getWritableDatabase();
+// Query for items from the database and get a cursor back
+        Cursor todoCursor = db.rawQuery("SELECT  * FROM items", null);
+
+
+        // Find ListView to populate
+        ListView lvItems = (ListView) findViewById(R.id.lvItems);
+// Setup cursor adapter using cursor from last step
+        TodoCursorAdapter todoAdapter = new TodoCursorAdapter(this, todoCursor, 0);
+// Attach cursor adapter to the ListView
+        lvItems.setAdapter(todoAdapter);
+
+       // populateArrayItems();
+        //lvItems = (ListView) findViewById(R.id.lvItems);
+        //lvItems.setAdapter(aToDoAdapter);
         etEditText = (EditText) findViewById(R.id.etNewItem);
 
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
