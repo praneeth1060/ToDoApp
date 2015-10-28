@@ -22,7 +22,7 @@ public class TodoDatabaseHandler extends SQLiteOpenHelper {
 
 
     // Post Table Columns
-    private static final String KEY_ITEM_ID = "id";
+    private static final String KEY_ITEM_ID = "_id";
     private static final String KEY_ITEM_TASK = "task";
     private static final String KEY_ITEM_PRIORITY = "priority";
 
@@ -87,6 +87,6 @@ public class TodoDatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    }
+
 
 }

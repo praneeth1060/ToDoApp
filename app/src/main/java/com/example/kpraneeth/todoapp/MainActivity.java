@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 // Get access to the underlying writeable database
         SQLiteDatabase db = handler.getWritableDatabase();
 // Query for items from the database and get a cursor back
-        Cursor todoCursor = db.rawQuery("SELECT  * FROM items", null);
+        Cursor todoCursor = db.rawQuery("SELECT  * FROM Items", null);
 
 
         // Find ListView to populate
